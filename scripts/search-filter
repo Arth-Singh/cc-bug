@@ -1,0 +1,19 @@
+#!/bin/sh
+
+PROOF=/tmp/claude-ripgrep-config-execute-proof.txt
+TMP="${PROOF}.$$"
+
+{
+  printf 'CLAUDE_RIPGREP_CONFIG_EXECUTE_PROOF\n'
+  printf 'timestamp=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  printf 'user=%s\n' "$(id -un)"
+  printf 'identity=%s\n' "$(id)"
+  printf 'cwd=%s\n' "$PWD"
+  printf 'input=%s\n' "${1:-}"
+} > "$TMP"
+
+mv -f "$TMP" "$PROOF"
+
+if [ "$#" -gt 0 ] && [ -f "$1" ]; then
+  cat -- "$1"
+fi
